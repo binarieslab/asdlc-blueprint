@@ -1,0 +1,33 @@
+name: docs
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  docs-updated:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'docs-not-needed') }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Code changes come with documentation changes
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          CODE: '^(lib|src|app|Sources|cmd|internal|pkg)/'
+          GENERATED: '(\.g\.dart|\.mocks\.dart|\.pb\.go|\.generated\.[a-z]+)$'
+          DOCS: '^(README\.md|AGENTS\.md|CLAUDE\.md|TESTING_STRATEGY\.md|docs/|feature-map/)'
+        run: |
+          changed=$(git diff --name-only "$BASE_SHA"...HEAD)
+          code=$(echo "$changed" | grep -E "$CODE" | grep -vE "$GENERATED" || true)
+          docs=$(echo "$changed" | grep -E "$DOCS" || true)
+          if [ -n "$code" ] && [ -z "$docs" ]; then
+            echo "This pull request changes code but no documentation:"
+            echo "$code"
+            echo
+            echo "Update docs/ (how the code works and why), feature-map/ (what the product does) or AGENTS.md, or label the pull request docs-not-needed and say why."
+            exit 1
+          fi

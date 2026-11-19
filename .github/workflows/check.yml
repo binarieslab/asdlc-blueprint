@@ -1,0 +1,22 @@
+name: check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  template:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: The example feature map is consistent
+        run: python3 template/feature-map/scripts/check.py
+
+      - name: The comment ban's own tests pass
+        run: python3 -m unittest discover -s template/tool/tests
+
+      - name: The template's own code has no comments
+        run: python3 template/tool/comment_ban.py --approved template/tool/approved_comments.txt template

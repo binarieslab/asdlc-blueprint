@@ -1,0 +1,62 @@
+name: lint-rules
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited, labeled, unlabeled]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  owner-approval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require the owner's label on a lint rule change
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          ACTION: ${{ github.event.action }}
+          LABEL: lint-rules-approved
+          OWNER: '{{OWNER_LOGIN}}'
+          PROTECTED: '^(tool/|feature-map/scripts/|analysis_options\.yaml$|\.swiftlint\.yml$|\.swift-format$|eslint\.config\.|\.eslintrc|\.golangci\.ya?ml$|detekt\.yml$|ruff\.toml$|\.github/workflows/|\.claude/settings\.json$|\.claude/hooks/)'
+        run: |
+          set -euo pipefail
+
+          file_count=$(gh api "repos/$REPO/pulls/$PR" --jq .changed_files)
+          if [ "$file_count" -gt 3000 ]; then
+            changed="$file_count files, more than GitHub lists"
+          else
+            files=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[] | .filename, (.previous_filename // empty)')
+            changed=$(printf '%s\n' "$files" | grep -E "$PROTECTED" | sort -u || true)
+          fi
+
+          if [ -z "$changed" ]; then
+            echo "No lint rule changed, so no approval is needed."
+            exit 0
+          fi
+          echo "This pull request changes the lint rules:"
+          echo "$changed"
+
+          if [ "$ACTION" = "synchronize" ]; then
+            if gh api -X DELETE "repos/$REPO/issues/$PR/labels/$LABEL" >/dev/null 2>&1; then
+              echo "New commits arrived, so the $LABEL label was removed."
+            fi
+          fi
+
+          labels=$(gh api --paginate "repos/$REPO/issues/$PR/labels" --jq '.[].name')
+          if ! printf '%s\n' "$labels" | grep -x "$LABEL" >/dev/null; then
+            echo "::error::This pull request changes the lint rules. It waits for $OWNER to add the $LABEL label."
+            exit 1
+          fi
+
+          labeler=$(gh api --paginate "repos/$REPO/issues/$PR/events" \
+            --jq ".[] | select(.event == \"labeled\" and .label.name == \"$LABEL\") | .actor.login" | tail -n 1)
+          if [ "$labeler" != "$OWNER" ]; then
+            echo "::error::$labeler added the $LABEL label, but only $OWNER can approve a lint rule change. Remove the label and ask $OWNER."
+            exit 1
+          fi
+          echo "$OWNER approved this lint rule change."
