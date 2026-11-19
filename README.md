@@ -82,6 +82,10 @@ Then follow [ADOPTING.md](ADOPTING.md): replace the `{{PLACEHOLDERS}}`, wire in 
 
 This is the first part of the lifecycle: one flow, from an issue to a merged pull request. Work entering from other places, such as a bug reported by a backend service, a customer email or a prompt, and a router that turns each one into an issue, is the next part. Deployment is left to your stack.
 
+## Contributing
+
+Issues and pull requests are welcome, especially reports from adopting the blueprint in a stack it doesn't cover yet. Please read the [Code of Conduct](CODE_OF_CONDUCT.md) first. Changes to the template keep its own rules: no comments in its code, and `python3 template/feature-map/scripts/check.py` and the comment ban's tests pass.
+
 ## License
 
 [MIT](LICENSE). Use it, change it, and make it your own.
