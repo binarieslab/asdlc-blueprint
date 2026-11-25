@@ -11,6 +11,6 @@
 
 **Do.** Each change runs the full path with a coding agent started by the owner: issue, tests first, implementation, `make check`, a pull request with "What to check in the app", a verification round by a fresh session, the owner's merge. After each change, every correction the owner had to make is turned into a check (back to stage 2 or 3) and recorded.
 
-**Exit check.** Five changes merged with their numbers recorded. Every correction ended as a check. All scorecard rows pass. The scorecard is marked "ASDLC-ready" with the date.
+**Exit check.** Five changes merged with their numbers recorded. Every correction ended as a check. Every scorecard row is `passed` or `not applicable`: none is open, `built, not run`, `waiting for owner`, `passed, not merged` or `accepted, not verified`. The scorecard is marked "ASDLC-ready" with the date.
 
 **From the template.** The loop in the blueprint's `README.md`, "How the loop runs, day to day".

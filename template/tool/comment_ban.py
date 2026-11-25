@@ -328,6 +328,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"note: approved comment no longer found in {file}: {preview(text)}", file=sys.stderr)
     files = len({file for file, _ in violations})
     print(f"{len(violations)} comment(s) not allowed in {files} file(s)", file=sys.stderr)
+    if violations:
+        print(
+            "Move what each comment explains into docs/ or the feature map, then delete the comment. "
+            "See docs/architecture/code-style-and-lint.md.",
+            file=sys.stderr,
+        )
     return 1 if violations else 0
 
 
