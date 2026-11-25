@@ -6,13 +6,13 @@ Every decision the owner took while this repository was prepared. A new session 
 
 Recorded in stage 0 and read by every later stage. No option offered to the owner may break one.
 
-- GitHub plan and seats: 
-- Repository visibility: 
-- Default branch, its protection and required checks: 
-- Owner's GitHub login: 
-- Paid services and new accounts: 
-- Where the repository's commands can run: 
-- Other standing rules: 
+- GitHub plan and seats:
+- Repository visibility:
+- Default branch, its protection and required checks:
+- Owner's GitHub login:
+- Paid services and new accounts:
+- Where the repository's commands can run:
+- Other standing rules:
 
 ## Open items
 

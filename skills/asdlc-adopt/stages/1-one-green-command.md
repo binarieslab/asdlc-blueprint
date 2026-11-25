@@ -8,9 +8,9 @@
 - Whether CI runs that same command, and whether CI can be bypassed. The required checks on the default branch are in the owner's constraints from stage 0; if they are still unknown, ask for them now as a Fact.
 - How long the command takes on a clean checkout.
 
-**Ask.** One round.
-- 1.1 **Decision.** What does the command run, and what is it called? Recommend the repository's own definition of done where there is one: lint, the tests, and the build where the stack has one. Keep an existing name; `make check` is the template's name and can be an alias. Never leave two commands that claim to be the gate.
-- 1.2 **Decision.** Which linter and formatter? Prefer what the repository already uses. Always offer "a small script of our own, no dependency" as an option: any package is a decision for that exact package. Name the rules that would be switched on, and how many places fail each today.
+**Ask.** One round. If the commands run only on the owner's machine, 1.3 and 1.5 wait for the output; say so, and ask them when it is there.
+- 1.1 **Decision.** What does the command run, and what is it called? Recommend the repository's own definition of done where there is one: lint, the tests, and the build where the stack has one. Keep an existing name; `make check` is the template's name and can be an alias. Never leave two commands that claim to be the gate. If the product ships on a platform whose build the command does not run, make that a Decision of its own: add the build, or record why not.
+- 1.2 **Decision.** Which linter and formatter? If an analyzer and a formatter are already configured and nothing suggests changing them, this is a Confirm line. Otherwise prefer what the repository already uses and always offer "a small script of our own, no dependency" as an option: any package is a decision for that exact package. Name the rules that would be switched on, and how many places fail each today.
 - 1.3 **Decision**, for each failing or flaky test: fix now, set aside with an issue, or replace. If none fails, say so in a Confirm line.
 - 1.4 **Approval** for the exact workflow and `Makefile` files you will change, with a Confirm line for where CI runs. A public repository uses GitHub-hosted runners only. Keep the existing CI jobs and add to them. Name the check the owner has to set as required.
 - 1.5 **Confirm** the time limit, proposed from the time you measured. A slow check stops being run.
@@ -26,6 +26,6 @@
 
 **From the template.** `Makefile`, `tool/lint.sh`, `.github/workflows/ci.yml`, each only where the repository has no equivalent. At this stage:
 - From `tool/lint.sh`, bring the analyzer and format lines only. Its comment ban line belongs to stage 2.
-- From the `Makefile`, bring `lint`, `test` and `check` without the `feature-map` prerequisite, which belongs to stage 6.
+- From the `Makefile`, bring `lint`, `test` and `check` without the `feature-map` prerequisite, which belongs to stage 6. If the repository already runs a feature map check, keep it.
 - Replace `{{ANALYZE_COMMAND}}`, `{{FORMAT_CHECK_COMMAND}}` and `{{TEST_COMMAND}}`.
 - In `ci.yml`, replace the Flutter toolchain step in both jobs with the stack's own. The template's `docs/architecture/github-workflows.md` lists the step for other stacks.

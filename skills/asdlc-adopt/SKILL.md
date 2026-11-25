@@ -39,20 +39,20 @@ These rules bind you for the whole run.
    - **Look.** Read-only. Inspect the repository and report what you found, each finding with its evidence (file path, command output). Check the exit code of every command: an empty result from a command that failed is not "none". Count with a tool, not by eye. Never report a command as working that you did not run; write "not run" and why.
    - **Ask.** Put the stage's asks to the owner as described under "How you ask". Then stop and wait.
    - **Do.** Carry out exactly what was decided. If the work needed anything the answers did not cover, list it in the pull request under "Beyond what was decided" and ask about it in the next round.
-   - **Check.** Run the stage's exit checks, show the output, update the scorecard and bring the pull request description up to date.
+   - **Check.** Run the stage's exit checks, show the output, update the scorecard and bring the pull request description up to date. Leave no stale line behind: open items, scorecard evidence and known gaps all say what is true now.
 3. **You propose; the owner decides.** Never choose between real alternatives yourself.
    - "You decide" on a question means: take your recommended option and record the decision as delegated.
    - "Decide the small things yourself" covers only the items you name back. List them at the top of your next message.
    - No answer is not an answer. Restate the ask in one line at the top of the next round. It blocks only the work that depends on it. If it stays unanswered, record it as open and do not build on it. Silence is never a yes and never "you decide".
    - Never offer an option that breaks a constraint the owner has stated. Stage 0 records those constraints.
-4. **Closing a stage.** The owner's "go on" closes a stage when the owner has seen the pull request and the output of the exit checks, and every row of the stage is `passed` or `not applicable`. A "go on" given before the evidence exists lets you continue the stage's work; it does not close the stage, so ask again when the evidence is there. If rows cannot pass yet because only the owner can do the step, or the check cannot run where you work, the next stage may start only on a recorded decision that names the open rows. They stay open, and stage 7 cannot pass while any of them is.
+4. **Closing a stage.** The owner's "go on" closes a stage when the owner has seen the pull request and the output of the exit checks, and every row of the stage is `passed`, `passed, not merged` or `not applicable`. A "go on" given before the evidence exists lets you continue the stage's work; it does not close the stage, so ask again when the evidence is there. If rows cannot pass yet because only the owner can do the step, or the check cannot run where you work, the next stage may start only on a recorded decision that names the open rows. They stay open, and stage 7 cannot pass while any of them is.
 5. **Record every decision** in `docs/asdlc/decisions.md`: the date, the ask, the choice, and the reason in the owner's words. A later session must be able to continue from that file and the scorecard alone.
 
 ## How you ask
 
-- **At most five asks per round**, counting every kind below, the most consequential first. A Confirm list counts as one. Where a stage has more, its file says which come in the first round.
+- **At most five asks per round**, counting every kind below, the most consequential first. A Confirm list counts as one, and so does a list of Facts. Where a stage has more, its file says which come in the first round.
 - **Do not ask what the repository can answer.** Look first. What you found goes into a Confirm line.
-- **Write for a phone.** Line one says what you need: "3 decisions, 1 approval, 1 confirm list". Then the asks. Then the findings in at most ten lines. Aim for 400 words. Longer evidence goes below a line reading "Details (optional)", and the owner must be able to answer without reading it. No tables. A correction to something you said earlier gets one line at the top. End with the reply you expect, for example: "Reply like: 1.1 A, 1.2 B, 1.4 yes, confirmed."
+- **Write for a phone.** Line one says what you need: "3 decisions, 1 approval, 1 confirm list". Then the asks. Then the findings in at most ten lines. Aim for 400 words for the whole message, findings included. Before the owner has decided, a finding belongs in the message only if an ask needs it; the rest goes into the pull request. Longer evidence goes below a line reading "Details (optional)", and the owner must be able to answer without reading it. No tables. A correction to something you said earlier gets one line at the top, and so does an ask the owner left unanswered. Whenever you leave a choice to the owner, recommend one option. End with the reply you expect, for example: "Reply like: 1.1 A, 1.2 B, 1.4 yes, confirmed."
 - **Number every ask** `<stage>.<n>` as the stage file does, including one you found not applicable: it becomes a Confirm line, never a silent gap. A follow-up takes a letter (0.3b). An ask the stage file does not list takes the next free number.
 
 There are four kinds of ask.
@@ -75,7 +75,7 @@ My recommendation: <letter>, because <one sentence>
 Confirm <stage>.<n>: <the statement> (<where it comes from>)
 ```
 
-**Approval**, for a change to a protected path. One per pull request, naming every file. The yes covers only those files in that pull request. "You decide" and "go on" are not a yes.
+**Approval**, for a change to a protected path. One per pull request, naming every file. The first time you use one, say in a clause what it is: the owner's yes for these files only. The yes covers only those files in that pull request. "You decide" and "go on" are not a yes.
 
 ```text
 Approval <stage>.<n>: may I change <exact files> to <purpose>? yes / no
@@ -89,9 +89,10 @@ Fact <stage>.<n>: <the question>. Where to find it: <the page or the command>
 
 ## When you cannot run or see something
 
-- **A command cannot run where you work** (a missing toolchain, no container runtime, no simulator). Say so in the first message of the stage. Give the exact commands and what a pass looks like, in one block. The evidence is then the output the owner pastes, or a CI run. Until it exists the row is `built, not run`. Asks that depend on the output wait for it.
+- **A command cannot run where you work** (a missing toolchain, no container runtime, no simulator). Say so in the first message of the stage. Give the exact commands and what a pass looks like, in one block the owner can forward to the machine as it is: the commands, the exit checks with their deliberate failures, and the restore commands at the end. Send that block once; do not send it again unchanged. The evidence is then the output the owner pastes, or a CI run. Until it exists the row is `built, not run`. Asks that depend on the output wait for it.
 - **You cannot see GitHub settings or open a pull request.** Ask for the settings as Facts. If you cannot open a pull request, commit on the branch, write the description to a file, and tell the owner the branch name and how to push it. Checks that need CI or a GitHub setting become a numbered checklist for the owner, with the evidence to send back, and their rows are `built, not run`.
 - **A step belongs to the owner** (a rollback, creating a token, adding a label, a store submission). Write the steps, ask for a date, and set the row to `waiting for owner`.
+- **While you only wait for the owner, send nothing.** A message that repeats the last one costs the owner a reply.
 
 ## Bringing in template pieces
 
@@ -107,7 +108,7 @@ Fact <stage>.<n>: <the question>. Where to find it: <the page or the command>
 - **A mechanical change** (formatting, a rename) gets its own pull request and is proven by a command, not by reading.
 - **Stacking.** If the previous stage is not merged, branch from its branch, name the base in the description and give the merge order. To try stacked branches together, use a throwaway local branch and delete it afterwards.
 - **Side pull requests** the owner asks for are allowed. Record each in the decisions with its place in the merge order.
-- **The description** says: what was decided, what ran and its output, a "Not run" list, "Beyond what was decided", and a line "Review: about N minutes; read these files".
+- **The description** says: what was decided, what ran and its output, a "Not run" list, "Beyond what was decided", what the owner has to do before it can merge, and a line "Review: about N minutes; read these files". What the owner has to do includes a label the repository requires for a change to a protected path, and signing the commits if the default branch requires signed commits.
 - Run `git status` before every commit. Caches and build output are never committed.
 
 ## Hard limits
@@ -130,7 +131,7 @@ No decision lifts these.
 2. Read the repository's own `AGENTS.md` and `CLAUDE.md` and follow them. Where they conflict with this skill, ask.
 3. Read `docs/asdlc/scorecard.md` and `docs/asdlc/decisions.md`, if they exist. The owner's constraints are at the top of the decisions.
 4. **When resuming, verify before you trust.** For each earlier stage recorded as passed, run one cheap check: the stage's command, or a look for the file its row names. A note such as "recorded in an earlier session" is not evidence. Put every row without evidence, or whose check fails, to the owner first, as `Decision R.<n>` with two options: reopen the row now, or mark it `accepted, not verified`. Set a `passed, not merged` row to `passed` once its pull request is merged.
-5. Continue at the first stage that has a row neither `passed` nor `not applicable`. If neither record exists, start at stage 0.
+5. Continue at the first stage that has a row other than `passed`, `passed, not merged` or `not applicable`. If neither record exists, start at stage 0.
 6. Read only the file of the stage you are in, and the template files it names.
 
 ## Repository profiles
@@ -144,7 +145,7 @@ You propose a profile in stage 0 and the owner confirms it. The profile decides 
 | `web-app` | Web application with accounts | A local build with a test account |
 | `apple-app` | iOS, macOS, watchOS app | The app on a simulator |
 | `android-app` | Android app | The app on an emulator |
-| `flutter-app` | Flutter app for iOS and Android | The app on a simulator and an emulator |
+| `flutter-app` | Flutter app for iOS and Android, sometimes the web | The app on a simulator and an emulator, and in a browser if it ships there |
 | `library` | Reusable package | An example or contract test that uses the public interface |
 | `legacy` | Code that is kept alive, not developed | Not applicable |
 

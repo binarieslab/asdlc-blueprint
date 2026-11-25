@@ -92,7 +92,7 @@ cp -R asdlc-blueprint/skills/asdlc-adopt ~/.claude/skills/
 
 Then start a Claude Code session in your repository and say: "Use the asdlc-adopt skill on this repository." It keeps a scorecard and a record of your decisions in `docs/asdlc/`, so a later session continues where the last one stopped.
 
-The skill was shaped by test runs on three repositories of different kinds: a backend API, a web app with accounts, and a static site. In each run one agent followed the skill and a second agent played the owner, once as an engaged owner, once answering in fragments from a phone, and once pressing for shortcuts. Stages 0 to 5 were exercised that way. Stages 6 and 7 have not been test-driven yet.
+The skill was shaped by test runs on three repositories of different kinds: a backend API, a web app with accounts, and a static site. In each run one agent followed the skill and a second agent played the owner, once as an engaged owner, once answering in fragments from a phone, and once pressing for shortcuts. Stages 0 to 5 were exercised that way. After the revision that followed, the skill was run once more, on a Flutter app, with a third agent as referee. Stages 6 and 7 have not been test-driven yet.
 
 ## How the loop runs, day to day
 
