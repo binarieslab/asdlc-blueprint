@@ -75,7 +75,7 @@ Warnings fail the check as errors do, the tests and `tool/` included. This repos
 
 ## The scorecard check
 
-`docs/asdlc/scorecard.md` records which parts of the agentic setup are in place, one row each, with a status and its evidence. `make asdlc-verify` keeps that record honest, and CI runs it in the `lint` job of every pull request:
+`docs/asdlc/scorecard.md` records which parts of the agentic setup are in place, one row each, with a status and its evidence. `make asdlc-verify` keeps that record honest, and the `asdlc-verify` workflow runs it on every pull request:
 
 ```bash
 make asdlc-verify

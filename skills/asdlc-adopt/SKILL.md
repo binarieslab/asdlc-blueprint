@@ -100,7 +100,7 @@ Fact <stage>.<n>: <the question>. Where to find it: <the page or the command>
 - **One command.** Later stages add their checks to the stage 1 command. Never add a second command beside it.
 - **Replace every placeholder.** Template files carry `{{NAMES}}` and a Flutter toolchain in CI. The stage files list the placeholders. Never commit one.
 - **Check the reach of a template tool** before promising what it enforces: which file types it reads, which programs it needs.
-- **The scorecard is checked by a tool.** `make asdlc-verify` arrives in stage 1 and runs in CI. It fails on a status without evidence, on a ready date with rows still open, and on a passed row whose check no longer holds. Never change a status or the ready date to get past it: fix what broke, or ask the owner to reopen the row. `tool/asdlc_checks.json` is a protected path, so each addition is named in the stage's Approval.
+- **The scorecard is checked by a tool, in every repository.** Stage 1 always creates `tool/asdlc_verify.py`, `tool/asdlc_checks.json`, the `asdlc-verify` target and the workflow `.github/workflows/asdlc-verify.yml` that calls it. No repository has an equivalent, so "keep what the repository already has" does not apply to these: a `Makefile` that exists gets the target added, and a repository without one gets a `Makefile` with it. It fails on a status without evidence, on a ready date with rows still open, and on a passed row whose check no longer holds. Never change a status or the ready date to get past it: fix what broke, or ask the owner to reopen the row. `tool/asdlc_checks.json` is a protected path, so each addition is named in the stage's Approval.
 
 ## Branches and pull requests
 

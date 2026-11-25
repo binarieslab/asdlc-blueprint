@@ -70,7 +70,7 @@ template/
     ├── ISSUE_TEMPLATE/            feature and bug, detailed enough for an agent
     ├── pull_request_template.md   with "What to check in the app" and "Decisions"
     ├── dependabot.yml
-    └── workflows/                 ci, docs-updated, owner-approval
+    └── workflows/                 ci, asdlc-verify, docs-updated, owner-approval
 ```
 
 ## Get it
