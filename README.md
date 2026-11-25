@@ -40,7 +40,7 @@ template/
 ├── AGENTS.md                      the contract every agent reads first
 ├── CLAUDE.md                      points Claude Code at AGENTS.md
 ├── TESTING_STRATEGY.md            what to test, test-first, journeys, snapshots
-├── Makefile                       make lint, make test, make check, make feature-map
+├── Makefile                       make lint, make test, make check, make feature-map, make asdlc-verify
 ├── feature-map/                   WHAT the product does
 │   ├── INDEX.md                   every feature, its status per platform
 │   ├── AGENTS.md                  how to write and keep a spec
@@ -57,7 +57,10 @@ template/
 ├── tool/
 │   ├── comment_ban.py             fails on comments in 15 languages, no dependencies
 │   ├── lint.sh                    comment ban, analyzer, format check
-│   └── tests/                     the comment ban's own tests
+│   ├── asdlc_verify.py            checks the scorecard and runs the checks behind its passed rows
+│   ├── asdlc_checks.json          those checks, one per scorecard row
+│   ├── probes/                    checks that break a rule on purpose to see the guard catch it
+│   └── tests/                     the tools' own tests
 ├── .claude/
 │   ├── settings.json              denies edits to the lint rules
 │   ├── hooks/protect-lint-rules.sh  blocks shell writes and self-approval
@@ -91,6 +94,8 @@ cp -R asdlc-blueprint/skills/asdlc-adopt ~/.claude/skills/
 ```
 
 Then start a Claude Code session in your repository and say: "Use the asdlc-adopt skill on this repository." It keeps a scorecard and a record of your decisions in `docs/asdlc/`, so a later session continues where the last one stopped.
+
+A repository is ASDLC-ready when every row of that scorecard has passed or does not apply. `make asdlc-verify` keeps the claim honest afterwards: CI runs it on every pull request, and it fails when a passed row's check no longer holds.
 
 The skill was shaped by test runs on three repositories of different kinds: a backend API, a web app with accounts, and a static site. In each run one agent followed the skill and a second agent played the owner, once as an engaged owner, once answering in fragments from a phone, and once pressing for shortcuts. Stages 0 to 5 were exercised that way. After the revision that followed, the skill was run once more, on a Flutter app, with a third agent as referee. Stages 6 and 7 have not been test-driven yet.
 

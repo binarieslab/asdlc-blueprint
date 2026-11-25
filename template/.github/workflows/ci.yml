@@ -28,6 +28,9 @@ jobs:
       - name: Feature map check, comment ban, analyzer and formatting
         run: make lint
 
+      - name: The ASDLC scorecard still matches the repository
+        run: make asdlc-verify
+
   build_and_test:
     needs: lint
     runs-on: ubuntu-latest

@@ -73,6 +73,35 @@ Describe the dependency rules between your layers or modules and the APIs that m
 
 Warnings fail the check as errors do, the tests and `tool/` included. This repository uses: {{ANALYZE_COMMAND}} and {{FORMAT_CHECK_COMMAND}}.
 
+## The scorecard check
+
+`docs/asdlc/scorecard.md` records which parts of the agentic setup are in place, one row each, with a status and its evidence. `make asdlc-verify` keeps that record honest, and CI runs it in the `lint` job of every pull request:
+
+```bash
+make asdlc-verify
+```
+
+It fails when:
+
+- a row has a status the scorecard does not know, or a status without evidence;
+- the scorecard says "ASDLC-ready since" a date while a row is neither `passed` nor `not applicable`;
+- a row is `passed` and the check behind it no longer holds.
+
+The checks behind the rows are listed in `tool/asdlc_checks.json`. Each names a scorecard row by its exact text, a command, and whether that command is expected to `pass` or to `fail`:
+
+```json
+{
+  "row": "The comment rule fails the check",
+  "run": "sh tool/probes/comment_ban.sh",
+  "expect": "fail",
+  "contains": "comment not allowed"
+}
+```
+
+A check with `"expect": "fail"` is a probe: it breaks the rule on purpose and passes only if the guard catches it. `tool/probes/comment_ban.sh` is the one to copy. A probe plants its violation in a temporary directory, or removes it again with a `trap`, so the working tree is never left changed. `contains` names text the output must show, so a probe that fails for another reason does not count; a command that cannot be started never counts. A check runs only once its row is `passed` or `passed, not merged`, so it can be written before the row passes. `timeout` sets a limit in seconds; the default is 600.
+
+The tool is `tool/asdlc_verify.py`, a Python script with no dependencies and its own tests in `tool/tests/`. It and `tool/asdlc_checks.json` are protected like the lint rules. Run it through `make`, as the hook blocks calling a script in `tool/` directly. Not every row can have a check: a rollback that was performed, or a merge GitHub refused, stays evidence the owner looked at. And the tool cannot tell an honest edit of the scorecard from one made to get past it, so a pull request that changes a status or the ready date gets the owner's look.
+
 ## Who may change the lint rules
 
 Agents never change the lint rules. The protected files are `tool/`, `feature-map/scripts/`, the analyzer configuration ({{ANALYZER_CONFIG}}), `.github/workflows/`, `.claude/settings.json` and `.claude/hooks/`. If a rule or a workflow has to change, the agent says so and the owner makes the change.

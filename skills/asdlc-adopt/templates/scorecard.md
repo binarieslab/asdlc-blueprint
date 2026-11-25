@@ -1,6 +1,6 @@
 # ASDLC scorecard
 
-The state of this repository against the ASDLC blueprint. A row passes only with evidence: a command and its output, a link to a pull request, or a refused action.
+The state of this repository against the ASDLC blueprint. A row passes only with evidence: a command and its output, a link to a pull request, or a refused action. `make asdlc-verify` checks this file in CI, and runs again the checks listed for its passed rows in `tool/asdlc_checks.json`. Keep the row texts and the status words exactly as they are here; the tool reads them.
 
 Profile: 
 ASDLC-ready since: 

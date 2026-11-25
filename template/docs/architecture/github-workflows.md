@@ -12,7 +12,7 @@ The workflows in `.github/workflows/`, the rules every one of them follows, the 
 | `lint-rules.yml` | the same, and when its description is edited (`pull_request_target`) | `owner-approval` | 5 |
 | {{deploy.yml}} | {{a push to `main`, or a version tag}} | {{deploy}} | {{...}} |
 
-`lint` runs `tool/lint.sh` and `build_and_test` runs `make test`. `docs-updated` and `owner-approval` are described in [code style and lint](code-style-and-lint.md).
+`lint` runs `tool/lint.sh` and then `make asdlc-verify`, and `build_and_test` runs `make test`. `docs-updated` and `owner-approval` are described in [code style and lint](code-style-and-lint.md).
 
 ## Rules every workflow follows
 

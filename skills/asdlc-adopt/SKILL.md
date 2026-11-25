@@ -39,7 +39,7 @@ These rules bind you for the whole run.
    - **Look.** Read-only. Inspect the repository and report what you found, each finding with its evidence (file path, command output). Check the exit code of every command: an empty result from a command that failed is not "none". Count with a tool, not by eye. Never report a command as working that you did not run; write "not run" and why.
    - **Ask.** Put the stage's asks to the owner as described under "How you ask". Then stop and wait.
    - **Do.** Carry out exactly what was decided. If the work needed anything the answers did not cover, list it in the pull request under "Beyond what was decided" and ask about it in the next round.
-   - **Check.** Run the stage's exit checks, show the output, update the scorecard and bring the pull request description up to date. Leave no stale line behind: open items, scorecard evidence and known gaps all say what is true now.
+   - **Check.** Run the stage's exit checks, show the output, update the scorecard and bring the pull request description up to date. Leave no stale line behind: open items, scorecard evidence and known gaps all say what is true now. Where an exit check can run by itself, add it to `tool/asdlc_checks.json` under its scorecard row, so that `make asdlc-verify` runs it again on every pull request.
 3. **You propose; the owner decides.** Never choose between real alternatives yourself.
    - "You decide" on a question means: take your recommended option and record the decision as delegated.
    - "Decide the small things yourself" covers only the items you name back. List them at the top of your next message.
@@ -100,6 +100,7 @@ Fact <stage>.<n>: <the question>. Where to find it: <the page or the command>
 - **One command.** Later stages add their checks to the stage 1 command. Never add a second command beside it.
 - **Replace every placeholder.** Template files carry `{{NAMES}}` and a Flutter toolchain in CI. The stage files list the placeholders. Never commit one.
 - **Check the reach of a template tool** before promising what it enforces: which file types it reads, which programs it needs.
+- **The scorecard is checked by a tool.** `make asdlc-verify` arrives in stage 1 and runs in CI. It fails on a status without evidence, on a ready date with rows still open, and on a passed row whose check no longer holds. Never change a status or the ready date to get past it: fix what broke, or ask the owner to reopen the row. `tool/asdlc_checks.json` is a protected path, so each addition is named in the stage's Approval.
 
 ## Branches and pull requests
 
@@ -130,7 +131,7 @@ No decision lifts these.
 1. Use the blueprint path the owner gave. Ask only if none was given. Its `template/` folder is where the pieces come from.
 2. Read the repository's own `AGENTS.md` and `CLAUDE.md` and follow them. Where they conflict with this skill, ask.
 3. Read `docs/asdlc/scorecard.md` and `docs/asdlc/decisions.md`, if they exist. The owner's constraints are at the top of the decisions.
-4. **When resuming, verify before you trust.** For each earlier stage recorded as passed, run one cheap check: the stage's command, or a look for the file its row names. A note such as "recorded in an earlier session" is not evidence. Put every row without evidence, or whose check fails, to the owner first, as `Decision R.<n>` with two options: reopen the row now, or mark it `accepted, not verified`. Set a `passed, not merged` row to `passed` once its pull request is merged.
+4. **When resuming, verify before you trust.** Run `make asdlc-verify` if the repository has it. For each earlier stage recorded as passed whose rows it does not cover, run one cheap check: the stage's command, or a look for the file its row names. A note such as "recorded in an earlier session" is not evidence. Put every row without evidence, or whose check fails, to the owner first, as `Decision R.<n>` with two options: reopen the row now, or mark it `accepted, not verified`. Set a `passed, not merged` row to `passed` once its pull request is merged.
 5. Continue at the first stage that has a row other than `passed`, `passed, not merged` or `not applicable`. If neither record exists, start at stage 0.
 6. Read only the file of the stage you are in, and the template files it names.
 

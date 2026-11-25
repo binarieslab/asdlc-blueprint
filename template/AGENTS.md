@@ -110,4 +110,5 @@ make check     # both, in that order
 - `make test`: the feature map check, then the tests and the tool tests
 - `make check`: `make lint`, then `make test`
 - `make feature-map`: the feature map check alone
+- `make asdlc-verify`: the scorecard check, which CI runs after the lint
 - {{`make run`, `make build`, `make deploy`, and anything else an agent needs}}

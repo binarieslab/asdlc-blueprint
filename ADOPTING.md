@@ -8,10 +8,14 @@ There are two ways to adopt. This checklist is the one you follow by hand. The o
 
 ```bash
 cp -R asdlc-blueprint/template/. path/to/your-repository/
+mkdir -p path/to/your-repository/docs/asdlc
+cp asdlc-blueprint/skills/asdlc-adopt/templates/scorecard.md path/to/your-repository/docs/asdlc/
 cd path/to/your-repository
-chmod +x tool/lint.sh tool/comment_ban.py feature-map/scripts/check.py .claude/hooks/protect-lint-rules.sh
+chmod +x tool/lint.sh tool/comment_ban.py tool/asdlc_verify.py tool/probes/comment_ban.sh feature-map/scripts/check.py .claude/hooks/protect-lint-rules.sh
 echo "__pycache__/" >> .gitignore
 ```
+
+`docs/asdlc/scorecard.md` is the list of what has to be in place, and CI checks it with `make asdlc-verify`. Fill in a row's status and evidence as each piece lands ([the scorecard check](template/docs/architecture/code-style-and-lint.md#the-scorecard-check)).
 
 If the repository already has an `AGENTS.md`, a `CLAUDE.md`, a `Makefile` or a pull request template, merge the blueprint's sections into yours rather than overwriting them.
 
