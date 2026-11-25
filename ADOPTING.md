@@ -2,6 +2,8 @@
 
 A checklist for bringing the blueprint into a repository, in the order that works. Most of it is a day of work for one repository; the specs and the docs grow from there with every change.
 
+There are two ways to adopt. This checklist is the one you follow by hand. The other is the [`asdlc-adopt` skill](skills/asdlc-adopt/SKILL.md), which has an agent do the work with you: it brings the pieces in one stage at a time, checks first and written rules last, asks you for each decision, and keeps a scorecard. Both use the same template.
+
 ## 1. Copy the template
 
 ```bash

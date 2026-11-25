@@ -8,6 +8,18 @@ It accompanies the engineering note **[Agentic Software Development, Part 1: Fro
 
 An agent writes code far faster than a person, but it carries none of the knowledge an experienced engineer brings to a three-line ticket. So everything that used to be implicit becomes explicit and checkable. A detailed issue says where to go. Lint rules, technical documentation, a decision log and tests written first narrow the path the agent can take. A second agent with a fresh context checks, in the running app, that it arrived.
 
+## The foundation
+
+The blueprint is built on one observation from Lauren Tan's talk ["All Code Is Slop (Except Mine)"](https://ai.engineer/talks/O_zcc6Xl12g-all-code-is-slop-except-mine): you can trust an agent's work only as far as its environment makes wrong work impossible or visible. She ranks the means from strongest to weakest, and the blueprint spends its effort in that order:
+
+1. **The codebase itself**: an API or a module boundary that makes the mistake impossible to write.
+2. **Deterministic checks**: lint rules, types, the compiler and tests, which fail the same way every time.
+3. **Verification of the running product**, with the evidence kept.
+4. **Written rules**, which an agent may or may not follow.
+5. **Human review**, kept for what the others cannot decide.
+
+Two habits follow. Every correction becomes a check, and a new line of prose is the last resort. And the loop for one change is made trustworthy by hand before any of it is automated, because automating a loop that produces poor changes only produces more of them.
+
 ## The six building blocks
 
 | Step | What it does | Where it lives |
@@ -21,14 +33,14 @@ An agent writes code far faster than a person, but it carries none of the knowle
 
 ## What's inside
 
-Everything you copy into your repository is in [`template/`](template/):
+Two things. [`skills/asdlc-adopt/`](skills/asdlc-adopt/) is a skill that walks an agent and a repository's owner through the adoption together, stage by stage: the agent inspects and proposes, the owner decides, and each stage ends in a check that passes or fails. [`template/`](template/) holds everything that ends up in your repository:
 
 ```
 template/
 ├── AGENTS.md                      the contract every agent reads first
 ├── CLAUDE.md                      points Claude Code at AGENTS.md
 ├── TESTING_STRATEGY.md            what to test, test-first, journeys, snapshots
-├── Makefile                       make lint, make test, make feature-map
+├── Makefile                       make lint, make test, make check, make feature-map
 ├── feature-map/                   WHAT the product does
 │   ├── INDEX.md                   every feature, its status per platform
 │   ├── AGENTS.md                  how to write and keep a spec
@@ -69,6 +81,17 @@ cp -R asdlc-blueprint/template/. path/to/your-repository/
 
 Then follow [ADOPTING.md](ADOPTING.md): replace the `{{PLACEHOLDERS}}`, wire in your stack's analyzer and tests, create the labels, and write your first specs.
 
+### Or adopt it with an agent
+
+Copying everything at once puts the written rules in before the checks that back them. The adoption skill brings the pieces in one stage at a time, strongest layer first, and asks you for every decision on the way:
+
+```bash
+mkdir -p ~/.claude/skills
+cp -R asdlc-blueprint/skills/asdlc-adopt ~/.claude/skills/
+```
+
+Then start a Claude Code session in your repository and say: "Use the asdlc-adopt skill on this repository." It keeps a scorecard and a record of your decisions in `docs/asdlc/`, so a later session continues where the last one stopped.
+
 ## How the loop runs, day to day
 
 1. **Write the issue** from the feature or bug template and put it on your GitHub Project board. Anything unclear gets `needs:human` and an answer before the build starts.
@@ -81,6 +104,8 @@ Then follow [ADOPTING.md](ADOPTING.md): replace the `{{PLACEHOLDERS}}`, wire in 
 ## What this does not cover yet
 
 This is the first part of the lifecycle: one flow, from an issue to a merged pull request. Work entering from other places, such as a bug reported by a backend service, a customer email or a prompt, and a router that turns each one into an issue, is the next part. Deployment is left to your stack.
+
+The adoption skill also asks for things the template has no files for yet: a gate on new dependencies, a secrets scan, enforced module boundaries, and release safety (compatibility with shipped versions, feature flags, rollback). Those are built for each repository's stack during the adoption.
 
 ## Contributing
 

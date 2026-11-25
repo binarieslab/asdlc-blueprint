@@ -11,4 +11,6 @@ test: feature-map ## Feature map check, then the tests and the lint tool's own t
 	python3 -m unittest discover -s tool/tests
 	{{TEST_COMMAND}}
 
-.PHONY: help feature-map lint test
+check: lint test ## The Gate in one command: lint, then test
+
+.PHONY: help feature-map lint test check
