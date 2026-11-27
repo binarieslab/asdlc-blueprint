@@ -1,0 +1,10 @@
+{
+  "checks": [
+    {
+      "row": "The comment rule fails the check",
+      "run": "sh tool/probes/comment_ban.sh",
+      "expect": "fail",
+      "contains": "comment not allowed"
+    }
+  ]
+}

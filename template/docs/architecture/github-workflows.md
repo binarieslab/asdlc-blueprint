@@ -8,11 +8,12 @@ The workflows in `.github/workflows/`, the rules every one of them follows, the 
 |---|---|---|---|
 | `ci.yml` | a pull request targets `main` or `release/**` | `lint` | 15 |
 | | | `build_and_test`, after `lint` | 25 |
+| `asdlc-verify.yml` | a pull request targets `main` or `release/**`, or the owner starts it by hand | `asdlc-verify` | 15 |
 | `docs.yml` | a pull request is opened, updated, reopened, labelled or unlabelled | `docs-updated` | 5 |
 | `lint-rules.yml` | the same, and when its description is edited (`pull_request_target`) | `owner-approval` | 5 |
 | {{deploy.yml}} | {{a push to `main`, or a version tag}} | {{deploy}} | {{...}} |
 
-`lint` runs `tool/lint.sh` and `build_and_test` runs `make test`. `docs-updated` and `owner-approval` are described in [code style and lint](code-style-and-lint.md).
+`lint` runs `tool/lint.sh` and `build_and_test` runs `make test`. `asdlc-verify` runs `make asdlc-verify`, [the scorecard check](code-style-and-lint.md#the-scorecard-check); it sets up no toolchain, so add the step below to it once a check in `tool/asdlc_checks.json` needs the stack's tools. `docs-updated` and `owner-approval` are described in [code style and lint](code-style-and-lint.md).
 
 ## Rules every workflow follows
 
@@ -24,7 +25,7 @@ The workflows in `.github/workflows/`, the rules every one of them follows, the 
 
 ## Setting up the toolchain
 
-`ci.yml` sets up Flutter as its example. For another stack, replace the "Set up the toolchain" step in both jobs:
+`ci.yml` sets up Flutter as its example. For another stack, replace the "Set up the toolchain" step in both jobs, and use the same step in `asdlc-verify.yml` when its checks need it:
 
 | Stack | Step |
 |---|---|
@@ -57,7 +58,7 @@ gh label create needs:human --description "Waiting for an answer from the owner"
 
 The verification round sets a commit status named `agent-verdict` on the pull request's head (see `.claude/agents/verifier.md`): `pending` while it runs, `success` only when every step passed in the app and every gate is green, `failure` otherwise. It points at the verdict comment.
 
-Required status checks are set by the owner in the repository settings (a ruleset or branch protection on `main` and `release/*`): `lint`, `build_and_test`, `docs-updated`, `owner-approval` and, once verification rounds run on every pull request, `agent-verdict`. Until then the checks run but block nothing.
+Required status checks are set by the owner in the repository settings (a ruleset or branch protection on `main` and `release/*`): `lint`, `build_and_test`, `asdlc-verify`, `docs-updated`, `owner-approval` and, once verification rounds run on every pull request, `agent-verdict`. Until then the checks run but block nothing.
 
 ## Deploying
 

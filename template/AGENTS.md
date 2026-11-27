@@ -99,6 +99,7 @@ Before considering any change done, all of the following pass:
 ```
 make lint      # feature map check, comment ban, analyzer, format check
 make test      # feature map check, the tests, the lint tool's own tests
+make check     # both, in that order
 ```
 
 {{Name any generation step that has to run first, such as code generation or translations, and that its output is committed with the change.}}
@@ -107,5 +108,7 @@ make test      # feature map check, the tests, the lint tool's own tests
 
 - `make lint`: the feature map check, then `tool/lint.sh`
 - `make test`: the feature map check, then the tests and the tool tests
+- `make check`: `make lint`, then `make test`
 - `make feature-map`: the feature map check alone
+- `make asdlc-verify`: the scorecard check, which CI runs on every pull request
 - {{`make run`, `make build`, `make deploy`, and anything else an agent needs}}

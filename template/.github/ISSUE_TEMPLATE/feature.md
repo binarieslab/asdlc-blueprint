@@ -18,6 +18,10 @@ labels: enhancement
 
 **What it is not:** what this issue deliberately does not do.
 
+**Expected effect:** what should change if this works (revenue, retention, cost, support load), and how that will be measured after release.
+
+**When to remove it:** the result that would mean this is switched off or deleted.
+
 ## User experience
 
 - Where it starts and the screens or flows involved, linked to `docs/screens/`.

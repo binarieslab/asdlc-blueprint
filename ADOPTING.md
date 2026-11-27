@@ -2,14 +2,20 @@
 
 A checklist for bringing the blueprint into a repository, in the order that works. Most of it is a day of work for one repository; the specs and the docs grow from there with every change.
 
+There are two ways to adopt. This checklist is the one you follow by hand. The other is the [`asdlc-adopt` skill](skills/asdlc-adopt/SKILL.md), which has an agent do the work with you: it brings the pieces in one stage at a time, checks first and written rules last, asks you for each decision, and keeps a scorecard. Both use the same template.
+
 ## 1. Copy the template
 
 ```bash
 cp -R asdlc-blueprint/template/. path/to/your-repository/
+mkdir -p path/to/your-repository/docs/asdlc
+cp asdlc-blueprint/skills/asdlc-adopt/templates/scorecard.md path/to/your-repository/docs/asdlc/
 cd path/to/your-repository
-chmod +x tool/lint.sh tool/comment_ban.py feature-map/scripts/check.py .claude/hooks/protect-lint-rules.sh
+chmod +x tool/lint.sh tool/comment_ban.py tool/asdlc_verify.py tool/probes/comment_ban.sh feature-map/scripts/check.py .claude/hooks/protect-lint-rules.sh
 echo "__pycache__/" >> .gitignore
 ```
+
+`docs/asdlc/scorecard.md` is the list of what has to be in place, and CI checks it with `make asdlc-verify`. Fill in a row's status and evidence as each piece lands ([the scorecard check](template/docs/architecture/code-style-and-lint.md#the-scorecard-check)).
 
 If the repository already has an `AGENTS.md`, a `CLAUDE.md`, a `Makefile` or a pull request template, merge the blueprint's sections into yours rather than overwriting them.
 

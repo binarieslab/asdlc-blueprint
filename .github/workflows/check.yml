@@ -15,8 +15,18 @@ jobs:
       - name: The example feature map is consistent
         run: python3 template/feature-map/scripts/check.py
 
-      - name: The comment ban's own tests pass
+      - name: The tools' own tests pass
         run: python3 -m unittest discover -s template/tool/tests
+
+      - name: The scorecard template is one the scorecard check can read
+        run: python3 template/tool/asdlc_verify.py --scorecard skills/asdlc-adopt/templates/scorecard.md --checks template/tool/asdlc_checks.json
+
+      - name: make asdlc-verify works in a repository made from the template
+        run: |
+          mkdir -p "$RUNNER_TEMP/adopted/docs/asdlc"
+          cp -R template/. "$RUNNER_TEMP/adopted/"
+          cp skills/asdlc-adopt/templates/scorecard.md "$RUNNER_TEMP/adopted/docs/asdlc/"
+          make -C "$RUNNER_TEMP/adopted" asdlc-verify
 
       - name: The template's own code has no comments
         run: python3 template/tool/comment_ban.py --approved template/tool/approved_comments.txt template

@@ -11,4 +11,9 @@ test: feature-map ## Feature map check, then the tests and the lint tool's own t
 	python3 -m unittest discover -s tool/tests
 	{{TEST_COMMAND}}
 
-.PHONY: help feature-map lint test
+check: lint test ## The Gate in one command: lint, then test
+
+asdlc-verify: ## Checks the ASDLC scorecard and runs again the checks behind its passed rows (docs/asdlc/scorecard.md)
+	python3 tool/asdlc_verify.py
+
+.PHONY: help feature-map lint test check asdlc-verify
